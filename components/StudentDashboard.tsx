@@ -17,10 +17,10 @@ interface StudentDashboardProps {
   onMarkAsRead: (id: string) => void;
 }
 
-export const StudentDashboard: React.FC<StudentDashboardProps> = ({ 
-  user, 
-  certificates, 
-  backlogs, 
+export const StudentDashboard: React.FC<StudentDashboardProps> = ({
+  user,
+  certificates,
+  backlogs,
   fees,
   results,
   notifications,
@@ -34,10 +34,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   const [newCert, setNewCert] = useState({ title: '', category: KTUActivityCategory.TECHNICAL_FESTS, points: '' });
   const [fileBase64, setFileBase64] = useState<string | null>(null);
   const [isAiLoading, setIsAiLoading] = useState(false);
-  
+
   const [payingFeeId, setPayingFeeId] = useState<string | null>(null);
   const [paymentProgress, setPaymentProgress] = useState(0);
-  
+
   const [applyingBacklogId, setApplyingBacklogId] = useState<string | null>(null);
 
   const approvedPoints = certificates
@@ -111,6 +111,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
   const pendingRegistrations = backlogs.filter(b => b.status === 'PENDING');
   const activeRegistrations = backlogs.filter(b => b.status === 'REGISTERED');
+  const unclearedBacklogs = backlogs.filter(b => b.status !== 'CLEARED');
 
   return (
     <div className="space-y-8">
@@ -134,10 +135,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { label: 'Activity Points', value: `${approvedPoints} / 100`, color: 'indigo', pct: Math.min(approvedPoints, 100) },
-          { label: 'Backlogs Pending', value: pendingRegistrations.length.toString(), color: 'rose', pct: (pendingRegistrations.length / 5) * 100 },
+          { label: 'Backlogs Pending', value: unclearedBacklogs.length.toString(), color: 'rose', pct: (unclearedBacklogs.length / 5) * 100 },
           { label: 'Academic CGPA', value: cgpa.toString(), color: 'emerald', pct: (cgpa / 10) * 100 }
         ].map((stat, idx) => (
-          <div key={idx} className={`bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-500 animate-slide-up stagger-${idx+1}`}>
+          <div key={idx} className={`bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-500 animate-slide-up stagger-${idx + 1}`}>
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">{stat.label}</h3>
             <p className={`text-3xl font-black mt-2 text-${stat.color}-600 dark:text-${stat.color}-400`}>{stat.value}</p>
             <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -159,22 +160,22 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-8 py-4 text-sm font-bold transition-all duration-500 rounded-2xl whitespace-nowrap animate-tab-entry stagger-${i+1} ${activeTab === tab.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 translate-y-[-2px]' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-600'}`}
+              className={`px-8 py-4 text-sm font-bold transition-all duration-500 rounded-2xl whitespace-nowrap animate-tab-entry stagger-${i + 1} ${activeTab === tab.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 translate-y-[-2px]' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-600'}`}
             >
               {tab.label}
             </button>
           ))}
-          
+
           <div className="ml-auto pr-4">
-              <button 
-                onClick={() => setActiveTab('alerts')}
-                className={`p-3 rounded-xl transition-all relative ${activeTab === 'alerts' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-50'}`}
-              >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                  {unreadNotifs.length > 0 && (
-                      <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse"></span>
-                  )}
-              </button>
+            <button
+              onClick={() => setActiveTab('alerts')}
+              className={`p-3 rounded-xl transition-all relative ${activeTab === 'alerts' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-50'}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+              {unreadNotifs.length > 0 && (
+                <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse"></span>
+              )}
+            </button>
           </div>
         </div>
 
@@ -194,19 +195,19 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-3">
                         <label className="text-xs font-bold text-slate-500 ml-4 uppercase tracking-widest">Activity Title</label>
-                        <SmoothInput 
-                          value={newCert.title} 
-                          onChange={(val) => setNewCert({...newCert, title: val})} 
-                          placeholder="e.g. Workshop on Web Dev" 
+                        <SmoothInput
+                          value={newCert.title}
+                          onChange={(val) => setNewCert({ ...newCert, title: val })}
+                          placeholder="e.g. Workshop on Web Dev"
                           fontSans
-                          required 
+                          required
                         />
                       </div>
                       <div className="space-y-3">
                         <label className="flex justify-between text-xs font-bold text-slate-500 ml-4 uppercase tracking-widest">
                           Category
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             onClick={handleAiSuggest}
                             disabled={isAiLoading || !newCert.title}
                             className="text-indigo-600 dark:text-indigo-400 hover:underline disabled:opacity-50 disabled:no-underline"
@@ -214,9 +215,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             {isAiLoading ? 'Analyzing...' : '✨ Auto-Suggest'}
                           </button>
                         </label>
-                        <select 
-                          value={newCert.category} 
-                          onChange={(e) => setNewCert({...newCert, category: e.target.value as KTUActivityCategory})} 
+                        <select
+                          value={newCert.category}
+                          onChange={(e) => setNewCert({ ...newCert, category: e.target.value as KTUActivityCategory })}
                           className={selectClasses}
                         >
                           {Object.values(KTUActivityCategory).map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -226,21 +227,21 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-3">
                         <label className="text-xs font-bold text-slate-500 ml-4 uppercase tracking-widest">Points Claimed</label>
-                        <SmoothInput 
-                          value={newCert.points} 
-                          onChange={(val) => setNewCert({...newCert, points: val})} 
+                        <SmoothInput
+                          value={newCert.points}
+                          onChange={(val) => setNewCert({ ...newCert, points: val })}
                           placeholder="Points (e.g. 10)"
-                          required 
+                          required
                         />
                       </div>
                       <div className="space-y-3">
                         <label className="text-xs font-bold text-slate-500 ml-4 uppercase tracking-widest">Evidence Attachment</label>
                         <div className="relative group animate-scale-in h-[60px]">
-                          <input 
-                            type="file" 
-                            onChange={handleFileChange} 
+                          <input
+                            type="file"
+                            onChange={handleFileChange}
                             className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                            required 
+                            required
                           />
                           <div className="w-full h-full px-5 flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-400 group-hover:border-indigo-500 transition-colors shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -260,7 +261,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {certificates.filter(c => c.studentId === user.id).map((cert, i) => (
-                    <div key={cert.id} className={`p-6 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm flex justify-between items-center group hover:border-indigo-200 hover:shadow-md transition-all animate-list-roll stagger-${Math.min(i+2, 7)}`}>
+                    <div key={cert.id} className={`p-6 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm flex justify-between items-center group hover:border-indigo-200 hover:shadow-md transition-all animate-list-roll stagger-${Math.min(i + 2, 7)}`}>
                       <div>
                         <p className="font-bold text-slate-900 dark:text-white">{cert.title}</p>
                         <p className="text-[10px] font-black text-indigo-500 uppercase tracking-wider mt-1">{cert.category}</p>
@@ -290,7 +291,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                         <div className="py-12 text-center text-slate-400 italic bg-slate-50 dark:bg-slate-900/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">No active backlogs. Keep up the good work!</div>
                       ) : (
                         pendingRegistrations.map((backlog, i) => (
-                          <div key={backlog.id} className={`p-6 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 animate-list-roll stagger-${Math.min(i+2, 7)} hover:border-indigo-200 transition-all group`}>
+                          <div key={backlog.id} className={`p-6 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 animate-list-roll stagger-${Math.min(i + 2, 7)} hover:border-indigo-200 transition-all group`}>
                             <div>
                               <div className="flex items-center space-x-3">
                                 <span className="text-sm font-black text-indigo-600 group-hover:scale-110 transition-transform">{backlog.subjectCode}</span>
@@ -336,7 +337,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 <h4 className="text-xl font-bold animate-list-roll stagger-1">Finance Portal</h4>
                 <div className="space-y-4">
                   {fees.map((fee, i) => (
-                    <div key={fee.id} className={`p-6 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 animate-list-roll stagger-${Math.min(i+2, 7)} hover:border-indigo-200 transition-all`}>
+                    <div key={fee.id} className={`p-6 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 animate-list-roll stagger-${Math.min(i + 2, 7)} hover:border-indigo-200 transition-all`}>
                       <div>
                         <p className="font-bold text-slate-900 dark:text-white">{fee.description}</p>
                         <p className="text-xs text-slate-400 mt-1">Due: {fee.dueDate} • Amount: ₹{fee.amount.toLocaleString()}</p>
@@ -367,7 +368,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-list-roll stagger-1">
                   <div className="bg-gradient-to-br from-indigo-50 to-white dark:from-slate-800 dark:to-slate-900 p-8 rounded-[2rem] border border-indigo-100 dark:border-slate-700 shadow-sm">
                     <h4 className="text-xs font-black text-indigo-500 uppercase tracking-widest mb-2">Semester Performance</h4>
-                    <p className="text-4xl font-black text-slate-900 dark:text-white">{results[results.length-1]?.sgpa || 0}</p>
+                    <p className="text-4xl font-black text-slate-900 dark:text-white">{results[results.length - 1]?.sgpa || 0}</p>
                     <span className="text-sm font-bold text-slate-400">SGPA (Current)</span>
                   </div>
                   <div className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-200/60 dark:border-slate-800 shadow-sm">
@@ -379,7 +380,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                 <div className="space-y-6">
                   {results.slice().reverse().map((semResult, i) => (
-                    <div key={semResult.semester} className={`bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm animate-list-roll stagger-${Math.min(i+2, 7)}`}>
+                    <div key={semResult.semester} className={`bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm animate-list-roll stagger-${Math.min(i + 2, 7)}`}>
                       <div className="px-8 py-5 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center border-b border-slate-100 dark:border-slate-700">
                         <span className="text-sm font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Semester {semResult.semester}</span>
                         <span className="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-black rounded-xl uppercase">SGPA: {semResult.sgpa}</span>
@@ -394,10 +395,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                                   <p className="text-[10px] font-bold text-slate-400 uppercase">{sub.code}</p>
                                 </td>
                                 <td className="px-8 py-5 text-right">
-                                  <span className={`inline-block w-8 h-8 leading-8 text-center rounded-lg font-black text-xs ${
-                                    ['S', 'A+', 'A'].includes(sub.grade) ? 'bg-emerald-50 text-emerald-600' : 
-                                    ['B+', 'B'].includes(sub.grade) ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-100 text-slate-600'
-                                  }`}>
+                                  <span className={`inline-block w-8 h-8 leading-8 text-center rounded-lg font-black text-xs ${['S', 'A+', 'A'].includes(sub.grade) ? 'bg-emerald-50 text-emerald-600' :
+                                      ['B+', 'B'].includes(sub.grade) ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-100 text-slate-600'
+                                    }`}>
                                     {sub.grade}
                                   </span>
                                 </td>
@@ -411,45 +411,45 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 </div>
               </div>
             ) : (
-                <div className="space-y-8 max-w-2xl mx-auto">
-                    <div className="flex justify-between items-center animate-list-roll stagger-1">
-                        <h4 className="text-xl font-black tracking-tight">Alert Center</h4>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{notifications.length} Total Alerts</span>
-                    </div>
-                    <div className="space-y-4">
-                        {notifications.length === 0 ? (
-                            <div className="py-20 text-center text-slate-400 italic bg-slate-50 dark:bg-slate-950 rounded-[3rem] border border-dashed border-slate-200 dark:border-slate-800 animate-scale-in">
-                                <p>No notifications yet. You're all caught up!</p>
-                            </div>
-                        ) : (
-                            notifications.map((n, i) => (
-                                <div 
-                                    key={n.id} 
-                                    onClick={() => onMarkAsRead(n.id)}
-                                    className={`p-6 rounded-[2rem] border transition-all cursor-pointer group animate-list-roll stagger-${Math.min(i+2, 7)} ${n.isRead ? 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 opacity-60' : 'bg-indigo-50/30 dark:bg-indigo-950/20 border-indigo-100 dark:border-indigo-800 shadow-lg shadow-indigo-500/5'}`}
-                                >
-                                    <div className="flex justify-between items-start mb-3">
-                                        <div className="flex items-center gap-3">
-                                            <div className={`p-2 rounded-xl ${n.type === 'FEE' ? 'bg-rose-100 text-rose-600' : 'bg-indigo-100 text-indigo-600'}`}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                                            </div>
-                                            <span className={`text-[10px] font-black uppercase tracking-widest ${n.type === 'FEE' ? 'text-rose-500' : 'text-indigo-500'}`}>{n.type} Alert</span>
-                                        </div>
-                                        <span className="text-[10px] font-bold text-slate-400">{n.timestamp}</span>
-                                    </div>
-                                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 leading-relaxed group-hover:text-indigo-600 transition-colors">
-                                        {n.message}
-                                    </p>
-                                    {!n.isRead && (
-                                        <div className="mt-4 flex justify-end">
-                                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:underline">Mark as Read</span>
-                                        </div>
-                                    )}
-                                </div>
-                            ))
-                        )}
-                    </div>
+              <div className="space-y-8 max-w-2xl mx-auto">
+                <div className="flex justify-between items-center animate-list-roll stagger-1">
+                  <h4 className="text-xl font-black tracking-tight">Alert Center</h4>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{notifications.length} Total Alerts</span>
                 </div>
+                <div className="space-y-4">
+                  {notifications.length === 0 ? (
+                    <div className="py-20 text-center text-slate-400 italic bg-slate-50 dark:bg-slate-950 rounded-[3rem] border border-dashed border-slate-200 dark:border-slate-800 animate-scale-in">
+                      <p>No notifications yet. You're all caught up!</p>
+                    </div>
+                  ) : (
+                    notifications.map((n, i) => (
+                      <div
+                        key={n.id}
+                        onClick={() => onMarkAsRead(n.id)}
+                        className={`p-6 rounded-[2rem] border transition-all cursor-pointer group animate-list-roll stagger-${Math.min(i + 2, 7)} ${n.isRead ? 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 opacity-60' : 'bg-indigo-50/30 dark:bg-indigo-950/20 border-indigo-100 dark:border-indigo-800 shadow-lg shadow-indigo-500/5'}`}
+                      >
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-xl ${n.type === 'FEE' ? 'bg-rose-100 text-rose-600' : 'bg-indigo-100 text-indigo-600'}`}>
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                            </div>
+                            <span className={`text-[10px] font-black uppercase tracking-widest ${n.type === 'FEE' ? 'text-rose-500' : 'text-indigo-500'}`}>{n.type} Alert</span>
+                          </div>
+                          <span className="text-[10px] font-bold text-slate-400">{n.timestamp}</span>
+                        </div>
+                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 leading-relaxed group-hover:text-indigo-600 transition-colors">
+                          {n.message}
+                        </p>
+                        {!n.isRead && (
+                          <div className="mt-4 flex justify-end">
+                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:underline">Mark as Read</span>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </div>
