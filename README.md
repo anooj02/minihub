@@ -16,5 +16,4 @@ The **KTU Academic Hub** is a unified platform designed to solve the fragmentati
 ## 🛠️ Technical Stack
 - **Frontend**: React 19, TypeScript
 - **Styling**: Tailwind CSS (Hardware-accelerated animations)
-- **AI Engine**: Google Gemini 3 Flash
 - **State Management**: React Hooks & Local Storage Persistence
