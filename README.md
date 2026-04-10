@@ -17,3 +17,7 @@ The **KTU Academic Hub** is a unified platform designed to solve the fragmentati
 - **Frontend**: React 19, TypeScript
 - **Styling**: Tailwind CSS (Hardware-accelerated animations)
 - **State Management**: React Hooks & Local Storage Persistence
+
+## 🤖demo credential
+-**student ID**: ADR23CD015
+_**PASSWORD**: pass123
